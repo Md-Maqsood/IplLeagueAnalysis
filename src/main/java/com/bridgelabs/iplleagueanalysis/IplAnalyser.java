@@ -74,4 +74,12 @@ public class IplAnalyser {
 	public List<Batsman> getTopTenNumSixesAndFours(String csvFilePath) throws CsvException {
 		return getTopTen(csvFilePath, SortByParameter.NUM_SIXES_AND_FOURS);
 	}
+
+	public List<Batsman> getTopThreeStrikeRatesWithMaxNumSixesAndFours(String csvFilePath) throws CsvException {
+		List<Batsman> topTenNumSixesandFours=getTopTenNumSixesAndFours(csvFilePath);
+		return topTenNumSixesandFours.stream()
+				.sorted(getComparatorForBatsman(SortByParameter.STRIKE_RATE))
+				.limit(3)
+				.collect(Collectors.toList());
+	}
 }
