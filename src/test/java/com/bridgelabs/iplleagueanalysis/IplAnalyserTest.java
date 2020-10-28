@@ -174,4 +174,16 @@ public class IplAnalyserTest {
 			e.printStackTrace();
 		}
 	}
+	
+	@Test
+	public void givenBowlersCsvShouldReturnTopThreeMaxWicketsWithBestBowlingAverages() {
+		List<Bowler> topWicketsWithBestAverages;
+		try {
+			topWicketsWithBestAverages = iplAnalyser.getTopThreeMaxWicketsWithBestBowlingAverages();
+			Assert.assertEquals(3, topWicketsWithBestAverages.size());
+			Assert.assertEquals("Imran Tahir", topWicketsWithBestAverages.get(0).name);
+		} catch (CsvException e) {
+			e.printStackTrace();
+		}
+	}
 }
