@@ -37,7 +37,7 @@ public class IplAnalyser {
 			throw new CsvException("Incorrect CSV File", CsvExceptionType.CENSUS_FILE_PROBLEM);
 		}
 	}
-	
+
 	private List<Batsman> getTopTen(String csvFilePath, SortByParameter sortByParameter) throws CsvException {
 		List<Batsman> batsmenList = loadBatsmenData(csvFilePath);
 		List<Batsman> topTen = batsmenList.stream().sorted(getComparatorForBatsman(sortByParameter)).limit(10)
@@ -55,7 +55,8 @@ public class IplAnalyser {
 			comparator = (player1, player2) -> player2.strikeRate.compareTo(player1.strikeRate);
 			break;
 		case NUM_SIXES_AND_FOURS:
-			comparator = (player1, player2) ->((Integer) (player2.numSixes+player2.numFours)).compareTo(player1.numSixes+player1.numFours);
+			comparator = (player1, player2) -> ((Integer) (player2.numSixes + player2.numFours))
+					.compareTo(player1.numSixes + player1.numFours);
 			break;
 		default:
 			comparator = (player1, player2) -> player2.name.compareTo(player1.name);
@@ -76,10 +77,14 @@ public class IplAnalyser {
 	}
 
 	public List<Batsman> getTopThreeStrikeRatesWithMaxNumSixesAndFours(String csvFilePath) throws CsvException {
-		List<Batsman> topTenNumSixesandFours=getTopTenNumSixesAndFours(csvFilePath);
-		return topTenNumSixesandFours.stream()
-				.sorted(getComparatorForBatsman(SortByParameter.STRIKE_RATE))
-				.limit(3)
+		List<Batsman> topTenNumSixesandFours = getTopTenNumSixesAndFours(csvFilePath);
+		return topTenNumSixesandFours.stream().sorted(getComparatorForBatsman(SortByParameter.STRIKE_RATE)).limit(3)
+				.collect(Collectors.toList());
+	}
+
+	public List<Batsman> getTopThreeAveragesWithBestStrikeRates(String csvFilePath) throws CsvException {
+		List<Batsman> topTenStrikeRates = getTopTenStrikeRates(csvFilePath);
+		return topTenStrikeRates.stream().sorted(getComparatorForBatsman(SortByParameter.AVERAGE)).limit(3)
 				.collect(Collectors.toList());
 	}
 }

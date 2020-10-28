@@ -87,4 +87,16 @@ public class IplAnalyserTest {
 			e.printStackTrace();
 		}
 	}
+	
+	@Test
+	public void givenBatsmanCsvShouldReturnTopThreeBatsmenWithBestAveragesWithBestStrikingRates() {
+		List<Batsman> topAveragesWithBestStrikeRates;
+		try {
+			topAveragesWithBestStrikeRates = iplAnalyser.getTopThreeAveragesWithBestStrikeRates(BATSMEN_CSV);
+			Assert.assertEquals(3, topAveragesWithBestStrikeRates.size());
+			Assert.assertEquals("Andre Russell" , topAveragesWithBestStrikeRates.get(0).name);
+		} catch (CsvException e) {
+			e.printStackTrace();
+		}
+	}
 }
