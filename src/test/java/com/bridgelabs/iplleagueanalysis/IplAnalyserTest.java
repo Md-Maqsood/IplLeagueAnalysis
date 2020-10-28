@@ -154,5 +154,12 @@ public class IplAnalyserTest {
 			e.printStackTrace();
 		}
 	}
-
+	
+	@Test
+	public void givenBowlersCsvShouldReturnTopThreeStrikeRatesWith5wAnd4w() {
+		List<Bowler> topStrikeRatesWith5wor4w;
+		topStrikeRatesWith5wor4w = iplAnalyser.getTopThreeStrikeRatesWith5wAnd4w();
+		Assert.assertEquals(3, topStrikeRatesWith5wor4w.size());
+		Assert.assertEquals("Alzarri Joseph", topStrikeRatesWith5wor4w.get(0).name);
+	}
 }

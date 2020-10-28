@@ -127,4 +127,9 @@ public class IplAnalyser {
 	public List<Bowler> getTopTenEconomyRates() throws CsvException {
 		return getTopTen(bowlersList, SortByParameter.ECONOMY);
 	}
+
+	public List<Bowler> getTopThreeStrikeRatesWith5wAnd4w() {
+		return (List<Bowler>) bowlersList.stream().filter(bowler -> (bowler.num4w != 0) || (bowler.num5w != 0))
+				.sorted(getComparator(SortByParameter.BOWLING_STRIKE_RATE)).limit(3).collect(Collectors.toList());
+	}
 }
