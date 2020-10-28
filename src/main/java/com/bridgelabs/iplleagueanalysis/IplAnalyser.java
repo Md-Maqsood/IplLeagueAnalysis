@@ -16,7 +16,8 @@ import com.bridgeLabs.csvHandler.ICsvBuilder;
 @SuppressWarnings(value = { "unchecked", "rawtypes" })
 public class IplAnalyser {
 	enum SortByParameter {
-		AVERAGE, STRIKE_RATE, NUM_SIXES_AND_FOURS, MOST_RUNS, BOWLING_AVERAGE, BOWLING_STRIKE_RATE
+		AVERAGE, STRIKE_RATE, NUM_SIXES_AND_FOURS, MOST_RUNS, BOWLING_AVERAGE, BOWLING_STRIKE_RATE,
+		ECONOMY		
 	}
 
 	private List<Batsman> batsmenList;
@@ -72,6 +73,9 @@ public class IplAnalyser {
 		case BOWLING_STRIKE_RATE:
 			comparatorBowler = (player1, player2) -> player1.bowlingStrikeRate.compareTo(player2.bowlingStrikeRate);
 			break;
+		case ECONOMY:
+			comparatorBowler = (player1, player2) -> player1.economy.compareTo(player2.economy);
+			break;
 		default:
 			comparatorBowler = (player1, player2) -> player1.name.compareTo(player2.name);
 		}
@@ -118,5 +122,9 @@ public class IplAnalyser {
 		List<Bowler> nonZeroStrikeRateBowlers = this.bowlersList.stream()
 				.filter(bowler -> !(bowler.bowlingStrikeRate.equals(0.0))).collect(Collectors.toList());
 		return getTopTen(nonZeroStrikeRateBowlers, SortByParameter.BOWLING_STRIKE_RATE);
+	}
+
+	public List<Bowler> getTopTenEconomyRates() throws CsvException {
+		return getTopTen(bowlersList, SortByParameter.ECONOMY);
 	}
 }

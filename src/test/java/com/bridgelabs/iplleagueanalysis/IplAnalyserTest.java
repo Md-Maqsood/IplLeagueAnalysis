@@ -142,5 +142,17 @@ public class IplAnalyserTest {
 			e.printStackTrace();
 		}
 	}
+	
+	@Test
+	public void givenBowlersCsvShouldReturnTopTenEconomyRates() {
+		List<Bowler> topEconomyRates;
+		try {
+			topEconomyRates = iplAnalyser.getTopTenEconomyRates();
+			Assert.assertEquals(10, topEconomyRates.size());
+			Assert.assertEquals("Shivam Dube", topEconomyRates.get(0).name);
+		} catch (CsvException e) {
+			e.printStackTrace();
+		}
+	}
 
 }
