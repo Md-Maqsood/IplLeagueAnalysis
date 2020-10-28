@@ -186,4 +186,12 @@ public class IplAnalyserTest {
 			e.printStackTrace();
 		}
 	}
+	
+	@Test
+	public void givenBatsmanAndBowlersCsvShouldReturnBestBattingAndBowlingAverage() {
+		List<Bowler> topBattingAndBowlingAverages;
+		topBattingAndBowlingAverages = iplAnalyser.getTopTenBestBowlingAndBattingAverages();
+		Assert.assertEquals(10, topBattingAndBowlingAverages.size());
+		Assert.assertEquals("Andre Russell", topBattingAndBowlingAverages.get(0).name);
+	}
 }
