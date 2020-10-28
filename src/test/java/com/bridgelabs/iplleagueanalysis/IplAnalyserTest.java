@@ -99,4 +99,16 @@ public class IplAnalyserTest {
 			e.printStackTrace();
 		}
 	}
+	
+	@Test
+	public void givenBatsmanCsvShouldReturnTopThreeBatsmenWithMostRunsWithBestAverages() {
+		List<Batsman> topRunsWithBestAverages;
+		try {
+			topRunsWithBestAverages = iplAnalyser.getTopThreeMostRunsWithBestAverages(BATSMEN_CSV);
+			Assert.assertEquals(3, topRunsWithBestAverages.size());
+			Assert.assertEquals("David Warner" , topRunsWithBestAverages.get(0).name);
+		} catch (CsvException e) {
+			e.printStackTrace();
+		}
+	}
 }

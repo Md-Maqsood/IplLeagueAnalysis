@@ -15,7 +15,7 @@ import com.bridgeLabs.csvHandler.ICsvBuilder;
 
 public class IplAnalyser {
 	enum SortByParameter {
-		AVERAGE, STRIKE_RATE, NUM_SIXES_AND_FOURS
+		AVERAGE, STRIKE_RATE, NUM_SIXES_AND_FOURS, MOST_RUNS
 	}
 
 	public List<Batsman> loadBatsmenData(String csvFilePath) throws CsvException {
@@ -58,6 +58,9 @@ public class IplAnalyser {
 			comparator = (player1, player2) -> ((Integer) (player2.numSixes + player2.numFours))
 					.compareTo(player1.numSixes + player1.numFours);
 			break;
+		case MOST_RUNS:
+			comparator = (player1, player2) -> player2.runs.compareTo(player1.runs);
+			break;
 		default:
 			comparator = (player1, player2) -> player2.name.compareTo(player1.name);
 		}
@@ -87,4 +90,10 @@ public class IplAnalyser {
 		return topTenStrikeRates.stream().sorted(getComparatorForBatsman(SortByParameter.AVERAGE)).limit(3)
 				.collect(Collectors.toList());
 	}
+
+	public List<Batsman> getTopThreeMostRunsWithBestAverages(String csvFilePath) throws CsvException {
+		List<Batsman> topTenAverages = getTopTenAverages(csvFilePath);
+		return topTenAverages.stream().sorted(getComparatorForBatsman(SortByParameter.MOST_RUNS)).limit(3)
+				.collect(Collectors.toList());	
+		}
 }
