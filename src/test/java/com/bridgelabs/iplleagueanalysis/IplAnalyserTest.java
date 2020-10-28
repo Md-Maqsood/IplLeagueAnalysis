@@ -45,9 +45,20 @@ public class IplAnalyserTest {
 		List<Batsman> topAverages;
 		try {
 			topAverages = iplAnalyser.getTopTenAverages(BATSMEN_CSV);
-			System.out.println(topAverages.get(0));
 			Assert.assertEquals(10, topAverages.size());
 			Assert.assertEquals("MS Dhoni" , topAverages.get(0).name);
+		} catch (CsvException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void givenBatsmanCsvShouldReturnTopTenStrikeRates() {
+		List<Batsman> topStrikeRates;
+		try {
+			topStrikeRates = iplAnalyser.getTopTenStrikeRates(BATSMEN_CSV);
+			Assert.assertEquals(10, topStrikeRates.size());
+			Assert.assertEquals("Ishant Sharma" , topStrikeRates.get(0).name);
 		} catch (CsvException e) {
 			e.printStackTrace();
 		}

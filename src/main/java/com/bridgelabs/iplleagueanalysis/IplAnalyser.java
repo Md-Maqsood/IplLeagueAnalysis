@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,6 +14,10 @@ import com.bridgeLabs.csvHandler.CsvExceptionType;
 import com.bridgeLabs.csvHandler.ICsvBuilder;
 
 public class IplAnalyser {
+	enum SortByParameter {
+		AVERAGE, STRIKE_RATE
+	}
+
 	public List<Batsman> loadBatsmenData(String csvFilePath) throws CsvException {
 		try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));) {
 			ICsvBuilder csvBuilder = CsvBuilderFactory.createBuilderOpen();
@@ -34,11 +39,32 @@ public class IplAnalyser {
 	}
 
 	public List<Batsman> getTopTenAverages(String csvFilePath) throws CsvException {
-		List<Batsman> batsmenList=loadBatsmenData(csvFilePath);
-		List<Batsman> topAverages=batsmenList.stream()
-				.sorted((batsman1,batsman2)->batsman2.average.compareTo(batsman1.average))
-				.limit(10)
+		return getTopTen(csvFilePath, SortByParameter.AVERAGE);
+	}
+
+	public List<Batsman> getTopTenStrikeRates(String csvFilePath) throws CsvException {
+		return getTopTen(csvFilePath, SortByParameter.STRIKE_RATE);
+	}
+
+	private List<Batsman> getTopTen(String csvFilePath, SortByParameter sortByParameter) throws CsvException {
+		List<Batsman> batsmenList = loadBatsmenData(csvFilePath);
+		List<Batsman> topTen = batsmenList.stream().sorted(getComparatorForBatsman(sortByParameter)).limit(10)
 				.collect(Collectors.toList());
-		return topAverages;
+		return topTen;
+	}
+
+	private Comparator<Batsman> getComparatorForBatsman(SortByParameter sortByParameter) {
+		Comparator<Batsman> comparator = null;
+		switch (sortByParameter) {
+		case AVERAGE:
+			comparator = (player1, player2) -> player2.average.compareTo(player1.average);
+			break;
+		case STRIKE_RATE:
+			comparator = (player1, player2) -> player2.strikeRate.compareTo(player1.strikeRate);
+			break;
+		default:
+			comparator = (player1, player2) -> player2.name.compareTo(player1.name);
+		}
+		return comparator;
 	}
 }
