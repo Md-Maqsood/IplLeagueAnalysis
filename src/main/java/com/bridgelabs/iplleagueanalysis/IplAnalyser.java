@@ -16,7 +16,7 @@ import com.bridgeLabs.csvHandler.ICsvBuilder;
 @SuppressWarnings(value = { "unchecked", "rawtypes" })
 public class IplAnalyser {
 	enum SortByParameter {
-		AVERAGE, STRIKE_RATE, NUM_SIXES_AND_FOURS, MOST_RUNS, BOWLING_AVERAGE
+		AVERAGE, STRIKE_RATE, NUM_SIXES_AND_FOURS, MOST_RUNS, BOWLING_AVERAGE, BOWLING_STRIKE_RATE
 	}
 
 	private List<Batsman> batsmenList;
@@ -69,6 +69,9 @@ public class IplAnalyser {
 		case BOWLING_AVERAGE:
 			comparatorBowler = (player1, player2) -> player1.bowlingAverage.compareTo(player2.bowlingAverage);
 			break;
+		case BOWLING_STRIKE_RATE:
+			comparatorBowler = (player1, player2) -> player1.bowlingStrikeRate.compareTo(player2.bowlingStrikeRate);
+			break;
 		default:
 			comparatorBowler = (player1, player2) -> player1.name.compareTo(player2.name);
 		}
@@ -109,5 +112,11 @@ public class IplAnalyser {
 		List<Bowler> nonZeroAverageBowlers = this.bowlersList.stream()
 				.filter(bowler -> !(bowler.bowlingAverage.equals(0.0))).collect(Collectors.toList());
 		return getTopTen(nonZeroAverageBowlers, SortByParameter.BOWLING_AVERAGE);
+	}
+
+	public List<Bowler> getTopTenBowlingStrikeRates() throws CsvException {
+		List<Bowler> nonZeroStrikeRateBowlers = this.bowlersList.stream()
+				.filter(bowler -> !(bowler.bowlingStrikeRate.equals(0.0))).collect(Collectors.toList());
+		return getTopTen(nonZeroStrikeRateBowlers, SortByParameter.BOWLING_STRIKE_RATE);
 	}
 }

@@ -23,7 +23,7 @@ public class Bowler {
 	public Double bowlingAverage;
 	
 	@CsvBindByName(column = "SR", required = true)
-	public Double strikeRate;
+	public Double bowlingStrikeRate;
 	
 	@CsvBindByName(column = "WKts", required = true)
 	public Integer wickets;
@@ -40,7 +40,7 @@ public class Bowler {
 	@Override
 	public String toString() {
 		return "Bowler [name=" + name + ", matches=" + matches + ", innings=" + innings + ", runs=" + runs + ", overs="
-				+ overs + ", bowlingAverage=" + bowlingAverage + ", strikeRate=" + strikeRate + ", wickets=" + wickets + ", economy="
+				+ overs + ", bowlingAverage=" + bowlingAverage + ", bowlingStrikeRate=" + bowlingStrikeRate + ", wickets=" + wickets + ", economy="
 				+ economy + ", num4w=" + num4w + ", num5w=" + num5w + "]";
 	}
 	
