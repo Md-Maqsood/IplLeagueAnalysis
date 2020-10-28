@@ -162,4 +162,16 @@ public class IplAnalyserTest {
 		Assert.assertEquals(3, topStrikeRatesWith5wor4w.size());
 		Assert.assertEquals("Alzarri Joseph", topStrikeRatesWith5wor4w.get(0).name);
 	}
+	
+	@Test
+	public void givenBowlersCsvShouldReturnTopThreeBestBowlingAveragesWithBestStrikeRates() {
+		List<Bowler> topAveragesWithBestStrikeRates;
+		try {
+			topAveragesWithBestStrikeRates = iplAnalyser.getTopThreeBowlingAveragesWithBestBowlingStrikeRates();
+			Assert.assertEquals(3, topAveragesWithBestStrikeRates.size());
+			Assert.assertEquals("Anukul Roy", topAveragesWithBestStrikeRates.get(0).name);
+		} catch (CsvException e) {
+			e.printStackTrace();
+		}
+	}
 }
