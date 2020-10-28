@@ -16,6 +16,13 @@ public class IplAnalyserTest {
 	@Before
 	public void setUp() {
 		this.iplAnalyser=new IplAnalyser();
+		try {
+			this.iplAnalyser.loadBatsmenData(BATSMEN_CSV);
+			this.iplAnalyser.loadBowlersData(BOWLERS_CSV);
+		} catch (CsvException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	@Test
@@ -44,7 +51,7 @@ public class IplAnalyserTest {
 	public void givenBatsmanCsvShouldReturnTopTenAverages() {
 		List<Batsman> topAverages;
 		try {
-			topAverages = iplAnalyser.getTopTenAverages(BATSMEN_CSV);
+			topAverages = iplAnalyser.getTopTenAverages();
 			Assert.assertEquals(10, topAverages.size());
 			Assert.assertEquals("MS Dhoni" , topAverages.get(0).name);
 		} catch (CsvException e) {
@@ -56,7 +63,7 @@ public class IplAnalyserTest {
 	public void givenBatsmanCsvShouldReturnTopTenStrikeRates() {
 		List<Batsman> topStrikeRates;
 		try {
-			topStrikeRates = iplAnalyser.getTopTenStrikeRates(BATSMEN_CSV);
+			topStrikeRates = iplAnalyser.getTopTenStrikeRates();
 			Assert.assertEquals(10, topStrikeRates.size());
 			Assert.assertEquals("Ishant Sharma" , topStrikeRates.get(0).name);
 		} catch (CsvException e) {
@@ -68,7 +75,7 @@ public class IplAnalyserTest {
 	public void givenBatsmanCsvShouldReturnTopTenBatsmenWithMaximumSixesAndFours() {
 		List<Batsman> topNumSixesAndFours;
 		try {
-			topNumSixesAndFours = iplAnalyser.getTopTenNumSixesAndFours(BATSMEN_CSV);
+			topNumSixesAndFours = iplAnalyser.getTopTenNumSixesAndFours();
 			Assert.assertEquals(10, topNumSixesAndFours.size());
 			Assert.assertEquals("Andre Russell" , topNumSixesAndFours.get(0).name);
 		} catch (CsvException e) {
@@ -80,7 +87,7 @@ public class IplAnalyserTest {
 	public void givenBatsmanCsvShouldReturnTopThreeBatsmenWithBestStrikingRatesWithMaximumSixesAndFours() {
 		List<Batsman> topStrikeRatesWithNumSixesAndFours;
 		try {
-			topStrikeRatesWithNumSixesAndFours = iplAnalyser.getTopThreeStrikeRatesWithMaxNumSixesAndFours(BATSMEN_CSV);
+			topStrikeRatesWithNumSixesAndFours = iplAnalyser.getTopThreeStrikeRatesWithMaxNumSixesAndFours();
 			Assert.assertEquals(3, topStrikeRatesWithNumSixesAndFours.size());
 			Assert.assertEquals("Andre Russell" , topStrikeRatesWithNumSixesAndFours.get(0).name);
 		} catch (CsvException e) {
@@ -92,7 +99,7 @@ public class IplAnalyserTest {
 	public void givenBatsmanCsvShouldReturnTopThreeBatsmenWithBestAveragesWithBestStrikingRates() {
 		List<Batsman> topAveragesWithBestStrikeRates;
 		try {
-			topAveragesWithBestStrikeRates = iplAnalyser.getTopThreeAveragesWithBestStrikeRates(BATSMEN_CSV);
+			topAveragesWithBestStrikeRates = iplAnalyser.getTopThreeAveragesWithBestStrikeRates();
 			Assert.assertEquals(3, topAveragesWithBestStrikeRates.size());
 			Assert.assertEquals("Andre Russell" , topAveragesWithBestStrikeRates.get(0).name);
 		} catch (CsvException e) {
@@ -104,11 +111,24 @@ public class IplAnalyserTest {
 	public void givenBatsmanCsvShouldReturnTopThreeBatsmenWithMostRunsWithBestAverages() {
 		List<Batsman> topRunsWithBestAverages;
 		try {
-			topRunsWithBestAverages = iplAnalyser.getTopThreeMostRunsWithBestAverages(BATSMEN_CSV);
+			topRunsWithBestAverages = iplAnalyser.getTopThreeMostRunsWithBestAverages();
 			Assert.assertEquals(3, topRunsWithBestAverages.size());
 			Assert.assertEquals("David Warner" , topRunsWithBestAverages.get(0).name);
 		} catch (CsvException e) {
 			e.printStackTrace();
 		}
 	}
+	
+	@Test
+	public void givenBowlersCsvShouldReturnTopTenAverages() {
+		List<Bowler> topAverages;
+		try {
+			topAverages = iplAnalyser.getTopTenBowlingAverages();
+			Assert.assertEquals(10, topAverages.size());
+			Assert.assertEquals("Anukul Roy" , topAverages.get(0).name);
+		} catch (CsvException e) {
+			e.printStackTrace();
+		}
+	}
+	
 }

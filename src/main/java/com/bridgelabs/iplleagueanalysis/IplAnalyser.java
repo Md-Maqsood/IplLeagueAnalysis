@@ -13,15 +13,19 @@ import com.bridgeLabs.csvHandler.CsvException;
 import com.bridgeLabs.csvHandler.CsvExceptionType;
 import com.bridgeLabs.csvHandler.ICsvBuilder;
 
+@SuppressWarnings(value = { "unchecked", "rawtypes" })
 public class IplAnalyser {
 	enum SortByParameter {
-		AVERAGE, STRIKE_RATE, NUM_SIXES_AND_FOURS, MOST_RUNS
+		AVERAGE, STRIKE_RATE, NUM_SIXES_AND_FOURS, MOST_RUNS, BOWLING_AVERAGE
 	}
+
+	private List<Batsman> batsmenList;
+	private List<Bowler> bowlersList;
 
 	public List<Batsman> loadBatsmenData(String csvFilePath) throws CsvException {
 		try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));) {
 			ICsvBuilder csvBuilder = CsvBuilderFactory.createBuilderOpen();
-			List<Batsman> batsmenList = csvBuilder.getListFromCsv(reader, Batsman.class);
+			this.batsmenList = csvBuilder.getListFromCsv(reader, Batsman.class);
 			return batsmenList;
 		} catch (IOException e) {
 			throw new CsvException("Incorrect CSV File", CsvExceptionType.CENSUS_FILE_PROBLEM);
@@ -31,69 +35,79 @@ public class IplAnalyser {
 	public List<Bowler> loadBowlersData(String csvFilePath) throws CsvException {
 		try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));) {
 			ICsvBuilder csvBuilder = CsvBuilderFactory.createBuilderOpen();
-			List<Bowler> bowlersList = csvBuilder.getListFromCsv(reader, Bowler.class);
+			this.bowlersList = csvBuilder.getListFromCsv(reader, Bowler.class);
 			return bowlersList;
 		} catch (IOException e) {
 			throw new CsvException("Incorrect CSV File", CsvExceptionType.CENSUS_FILE_PROBLEM);
 		}
 	}
 
-	private List<Batsman> getTopTen(String csvFilePath, SortByParameter sortByParameter) throws CsvException {
-		List<Batsman> batsmenList = loadBatsmenData(csvFilePath);
-		List<Batsman> topTen = batsmenList.stream().sorted(getComparatorForBatsman(sortByParameter)).limit(10)
+	private <T> List<T> getTopTen(List<T> playersList, SortByParameter sortByParameter) throws CsvException {
+		List<T> topTen = (List<T>) playersList.stream().sorted(getComparator(sortByParameter)).limit(10)
 				.collect(Collectors.toList());
 		return topTen;
 	}
 
-	private Comparator<Batsman> getComparatorForBatsman(SortByParameter sortByParameter) {
-		Comparator<Batsman> comparator = null;
+	private Comparator getComparator(SortByParameter sortByParameter) {
+
+		Comparator<Batsman> comparatorBatsman = null;
+		Comparator<Bowler> comparatorBowler = null;
 		switch (sortByParameter) {
 		case AVERAGE:
-			comparator = (player1, player2) -> player2.average.compareTo(player1.average);
+			comparatorBatsman = (player1, player2) -> player2.average.compareTo(player1.average);
 			break;
 		case STRIKE_RATE:
-			comparator = (player1, player2) -> player2.strikeRate.compareTo(player1.strikeRate);
+			comparatorBatsman = (player1, player2) -> player2.strikeRate.compareTo(player1.strikeRate);
 			break;
 		case NUM_SIXES_AND_FOURS:
-			comparator = (player1, player2) -> ((Integer) (player2.numSixes + player2.numFours))
+			comparatorBatsman = (player1, player2) -> ((Integer) (player2.numSixes + player2.numFours))
 					.compareTo(player1.numSixes + player1.numFours);
 			break;
 		case MOST_RUNS:
-			comparator = (player1, player2) -> player2.runs.compareTo(player1.runs);
+			comparatorBatsman = (player1, player2) -> player2.runs.compareTo(player1.runs);
+			break;
+		case BOWLING_AVERAGE:
+			comparatorBowler = (player1, player2) -> player1.bowlingAverage.compareTo(player2.bowlingAverage);
 			break;
 		default:
-			comparator = (player1, player2) -> player2.name.compareTo(player1.name);
+			comparatorBowler = (player1, player2) -> player1.name.compareTo(player2.name);
 		}
-		return comparator;
+		return comparatorBatsman == null ? comparatorBowler : comparatorBatsman;
 	}
 
-	public List<Batsman> getTopTenAverages(String csvFilePath) throws CsvException {
-		return getTopTen(csvFilePath, SortByParameter.AVERAGE);
+	public List<Batsman> getTopTenAverages() throws CsvException {
+		return getTopTen(batsmenList, SortByParameter.AVERAGE);
 	}
 
-	public List<Batsman> getTopTenStrikeRates(String csvFilePath) throws CsvException {
-		return getTopTen(csvFilePath, SortByParameter.STRIKE_RATE);
+	public List<Batsman> getTopTenStrikeRates() throws CsvException {
+		return getTopTen(batsmenList, SortByParameter.STRIKE_RATE);
 	}
 
-	public List<Batsman> getTopTenNumSixesAndFours(String csvFilePath) throws CsvException {
-		return getTopTen(csvFilePath, SortByParameter.NUM_SIXES_AND_FOURS);
+	public List<Batsman> getTopTenNumSixesAndFours() throws CsvException {
+		return getTopTen(batsmenList, SortByParameter.NUM_SIXES_AND_FOURS);
 	}
 
-	public List<Batsman> getTopThreeStrikeRatesWithMaxNumSixesAndFours(String csvFilePath) throws CsvException {
-		List<Batsman> topTenNumSixesandFours = getTopTenNumSixesAndFours(csvFilePath);
-		return topTenNumSixesandFours.stream().sorted(getComparatorForBatsman(SortByParameter.STRIKE_RATE)).limit(3)
+	public List<Batsman> getTopThreeStrikeRatesWithMaxNumSixesAndFours() throws CsvException {
+		List<Batsman> topTenNumSixesandFours = getTopTenNumSixesAndFours();
+		return (List<Batsman>) topTenNumSixesandFours.stream().sorted(getComparator(SortByParameter.STRIKE_RATE))
+				.limit(3).collect(Collectors.toList());
+	}
+
+	public List<Batsman> getTopThreeAveragesWithBestStrikeRates() throws CsvException {
+		List<Batsman> topTenStrikeRates = getTopTenStrikeRates();
+		return (List<Batsman>) topTenStrikeRates.stream().sorted(getComparator(SortByParameter.AVERAGE)).limit(3)
 				.collect(Collectors.toList());
 	}
 
-	public List<Batsman> getTopThreeAveragesWithBestStrikeRates(String csvFilePath) throws CsvException {
-		List<Batsman> topTenStrikeRates = getTopTenStrikeRates(csvFilePath);
-		return topTenStrikeRates.stream().sorted(getComparatorForBatsman(SortByParameter.AVERAGE)).limit(3)
+	public List<Batsman> getTopThreeMostRunsWithBestAverages() throws CsvException {
+		List<Batsman> topTenAverages = getTopTenAverages();
+		return (List<Batsman>) topTenAverages.stream().sorted(getComparator(SortByParameter.MOST_RUNS)).limit(3)
 				.collect(Collectors.toList());
 	}
 
-	public List<Batsman> getTopThreeMostRunsWithBestAverages(String csvFilePath) throws CsvException {
-		List<Batsman> topTenAverages = getTopTenAverages(csvFilePath);
-		return topTenAverages.stream().sorted(getComparatorForBatsman(SortByParameter.MOST_RUNS)).limit(3)
-				.collect(Collectors.toList());	
-		}
+	public List<Bowler> getTopTenBowlingAverages() throws CsvException {
+		List<Bowler> nonZeroAverageBowlers = this.bowlersList.stream()
+				.filter(bowler -> !(bowler.bowlingAverage.equals(0.0))).collect(Collectors.toList());
+		return getTopTen(nonZeroAverageBowlers, SortByParameter.BOWLING_AVERAGE);
+	}
 }
