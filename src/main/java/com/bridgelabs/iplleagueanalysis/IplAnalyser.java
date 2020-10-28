@@ -15,7 +15,7 @@ import com.bridgeLabs.csvHandler.ICsvBuilder;
 
 public class IplAnalyser {
 	enum SortByParameter {
-		AVERAGE, STRIKE_RATE
+		AVERAGE, STRIKE_RATE, NUM_SIXES_AND_FOURS
 	}
 
 	public List<Batsman> loadBatsmenData(String csvFilePath) throws CsvException {
@@ -37,15 +37,7 @@ public class IplAnalyser {
 			throw new CsvException("Incorrect CSV File", CsvExceptionType.CENSUS_FILE_PROBLEM);
 		}
 	}
-
-	public List<Batsman> getTopTenAverages(String csvFilePath) throws CsvException {
-		return getTopTen(csvFilePath, SortByParameter.AVERAGE);
-	}
-
-	public List<Batsman> getTopTenStrikeRates(String csvFilePath) throws CsvException {
-		return getTopTen(csvFilePath, SortByParameter.STRIKE_RATE);
-	}
-
+	
 	private List<Batsman> getTopTen(String csvFilePath, SortByParameter sortByParameter) throws CsvException {
 		List<Batsman> batsmenList = loadBatsmenData(csvFilePath);
 		List<Batsman> topTen = batsmenList.stream().sorted(getComparatorForBatsman(sortByParameter)).limit(10)
@@ -62,9 +54,24 @@ public class IplAnalyser {
 		case STRIKE_RATE:
 			comparator = (player1, player2) -> player2.strikeRate.compareTo(player1.strikeRate);
 			break;
+		case NUM_SIXES_AND_FOURS:
+			comparator = (player1, player2) ->((Integer) (player2.numSixes+player2.numFours)).compareTo(player1.numSixes+player1.numFours);
+			break;
 		default:
 			comparator = (player1, player2) -> player2.name.compareTo(player1.name);
 		}
 		return comparator;
+	}
+
+	public List<Batsman> getTopTenAverages(String csvFilePath) throws CsvException {
+		return getTopTen(csvFilePath, SortByParameter.AVERAGE);
+	}
+
+	public List<Batsman> getTopTenStrikeRates(String csvFilePath) throws CsvException {
+		return getTopTen(csvFilePath, SortByParameter.STRIKE_RATE);
+	}
+
+	public List<Batsman> getTopTenNumSixesAndFours(String csvFilePath) throws CsvException {
+		return getTopTen(csvFilePath, SortByParameter.NUM_SIXES_AND_FOURS);
 	}
 }

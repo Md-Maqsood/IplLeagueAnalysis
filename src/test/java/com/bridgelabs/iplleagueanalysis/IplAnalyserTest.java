@@ -64,4 +64,16 @@ public class IplAnalyserTest {
 		}
 	}
 	
+	@Test
+	public void givenBatsmanCsvShouldReturnTopTenBatsmenWithMaximumSixesAndFours() {
+		List<Batsman> topNumSixesAndFours;
+		try {
+			topNumSixesAndFours = iplAnalyser.getTopTenNumSixesAndFours(BATSMEN_CSV);
+			Assert.assertEquals(10, topNumSixesAndFours.size());
+			Assert.assertEquals("Andre Russell" , topNumSixesAndFours.get(0).name);
+		} catch (CsvException e) {
+			e.printStackTrace();
+		}
+	}
+	
 }
