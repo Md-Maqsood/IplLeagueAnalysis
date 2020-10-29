@@ -177,4 +177,10 @@ public class IplAnalyser {
 		return (List<Batsman>) getTopTenAverages().stream().sorted(getComparator(SortByParameter.NUM_HUNDREDS)).limit(3)
 				.collect(Collectors.toList());
 	}
+
+	public List<Batsman> getTopThreeBestAveragesWithoutHundredOrFifty() {
+		return (List<Batsman>) batsmenList.stream()
+				.filter(batsman -> (batsman.numFifties.equals(0)) && (batsman.numHundreds.equals(0)))
+				.sorted(getComparator(SortByParameter.AVERAGE)).limit(10).collect(Collectors.toList());
+	}
 }

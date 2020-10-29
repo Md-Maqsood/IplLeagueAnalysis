@@ -142,7 +142,7 @@ public class IplAnalyserTest {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Test
 	public void givenBowlersCsvShouldReturnTopTenEconomyRates() {
 		List<Bowler> topEconomyRates;
@@ -154,7 +154,7 @@ public class IplAnalyserTest {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Test
 	public void givenBowlersCsvShouldReturnTopThreeStrikeRatesWith5wAnd4w() {
 		List<Bowler> topStrikeRatesWith5wor4w;
@@ -162,7 +162,7 @@ public class IplAnalyserTest {
 		Assert.assertEquals(3, topStrikeRatesWith5wor4w.size());
 		Assert.assertEquals("Alzarri Joseph", topStrikeRatesWith5wor4w.get(0).name);
 	}
-	
+
 	@Test
 	public void givenBowlersCsvShouldReturnTopThreeBestBowlingAveragesWithBestStrikeRates() {
 		List<Bowler> topAveragesWithBestStrikeRates;
@@ -174,7 +174,7 @@ public class IplAnalyserTest {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Test
 	public void givenBowlersCsvShouldReturnTopThreeMaxWicketsWithBestBowlingAverages() {
 		List<Bowler> topWicketsWithBestAverages;
@@ -186,7 +186,7 @@ public class IplAnalyserTest {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Test
 	public void givenBatsmanAndBowlersCsvShouldReturnBestBattingAndBowlingAverage() {
 		List<Bowler> topBattingAndBowlingAverages;
@@ -194,7 +194,7 @@ public class IplAnalyserTest {
 		Assert.assertEquals(10, topBattingAndBowlingAverages.size());
 		Assert.assertEquals("Andre Russell", topBattingAndBowlingAverages.get(0).name);
 	}
-	
+
 	@Test
 	public void givenBatsmanAndBowlersCsvShouldMostRunsAndWickets() {
 		List<Bowler> mostRunsAndWickets;
@@ -202,7 +202,7 @@ public class IplAnalyserTest {
 		Assert.assertEquals(10, mostRunsAndWickets.size());
 		Assert.assertEquals("Kagiso Rabada", mostRunsAndWickets.get(0).name);
 	}
-	
+
 	@Test
 	public void givenBatsmanCsvShouldReturnTopThreeBatsmenWithMostNumHundredsRunsWithBestAverages() {
 		List<Batsman> topNumHundredsWithBestAverages;
@@ -213,5 +213,13 @@ public class IplAnalyserTest {
 		} catch (CsvException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Test
+	public void givenBatsmanCsvShouldReturnTopTenBatsmenWithNoHundredsOrFiftiesWithBestAverages() {
+		List<Batsman> bestAveragesWithoutHundredOrFifty;
+		bestAveragesWithoutHundredOrFifty = iplAnalyser.getTopThreeBestAveragesWithoutHundredOrFifty();
+		Assert.assertEquals(10, bestAveragesWithoutHundredOrFifty.size());
+		Assert.assertEquals("Marcus Stoinis", bestAveragesWithoutHundredOrFifty.get(0).name);
 	}
 }
