@@ -153,4 +153,14 @@ public class IplAnalyser {
 			return allRounder.bowlingAverage*(1/batsman.average);
 		})).limit(10).collect(Collectors.toList());
 	}
+
+	public List<Bowler> getTopTenAllRounders() {
+		List<Bowler>allRounders=bowlersList.stream().filter(bowler->{
+			return (!bowler.wickets.equals(0))&&batsmenList.stream().anyMatch(batsman->batsman.name.equalsIgnoreCase(bowler.name));
+		}).collect(Collectors.toList());
+		return allRounders.stream().sorted(Comparator.comparing(allRounder->{
+			Batsman batsman= batsmenList.stream().filter(batsMan->batsMan.name.equalsIgnoreCase(allRounder.name)).findFirst().orElse(null);
+			return 1/(allRounder.wickets*batsman.runs);
+		})).limit(10).collect(Collectors.toList());
+	}
 }

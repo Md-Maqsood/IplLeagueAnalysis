@@ -194,4 +194,12 @@ public class IplAnalyserTest {
 		Assert.assertEquals(10, topBattingAndBowlingAverages.size());
 		Assert.assertEquals("Andre Russell", topBattingAndBowlingAverages.get(0).name);
 	}
+	
+	@Test
+	public void givenBatsmanAndBowlersCsvShouldMostRunsAndWickets() {
+		List<Bowler> mostRunsAndWickets;
+		mostRunsAndWickets = iplAnalyser.getTopTenAllRounders();
+		Assert.assertEquals(10, mostRunsAndWickets.size());
+		Assert.assertEquals("Kagiso Rabada", mostRunsAndWickets.get(0).name);
+	}
 }
