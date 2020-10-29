@@ -202,4 +202,16 @@ public class IplAnalyserTest {
 		Assert.assertEquals(10, mostRunsAndWickets.size());
 		Assert.assertEquals("Kagiso Rabada", mostRunsAndWickets.get(0).name);
 	}
+	
+	@Test
+	public void givenBatsmanCsvShouldReturnTopThreeBatsmenWithMostNumHundredsRunsWithBestAverages() {
+		List<Batsman> topNumHundredsWithBestAverages;
+		try {
+			topNumHundredsWithBestAverages = iplAnalyser.getTopThreeMostNumHundredsWithBestAverages();
+			Assert.assertEquals(3, topNumHundredsWithBestAverages.size());
+			Assert.assertEquals("David Warner", topNumHundredsWithBestAverages.get(0).name);
+		} catch (CsvException e) {
+			e.printStackTrace();
+		}
+	}
 }

@@ -16,7 +16,8 @@ import com.bridgeLabs.csvHandler.ICsvBuilder;
 @SuppressWarnings(value = { "unchecked", "rawtypes" })
 public class IplAnalyser {
 	enum SortByParameter {
-		AVERAGE, STRIKE_RATE, NUM_SIXES_AND_FOURS, MOST_RUNS, BOWLING_AVERAGE, BOWLING_STRIKE_RATE, ECONOMY, WICKETS
+		AVERAGE, STRIKE_RATE, NUM_SIXES_AND_FOURS, MOST_RUNS, BOWLING_AVERAGE, BOWLING_STRIKE_RATE, ECONOMY, WICKETS,
+		NUM_HUNDREDS
 	}
 
 	private List<Batsman> batsmenList;
@@ -65,6 +66,9 @@ public class IplAnalyser {
 			break;
 		case MOST_RUNS:
 			comparatorBatsman = (player1, player2) -> player2.runs.compareTo(player1.runs);
+			break;
+		case NUM_HUNDREDS:
+			comparatorBatsman = (player1, player2) -> player2.numHundreds.compareTo(player1.numHundreds);
 			break;
 		case BOWLING_AVERAGE:
 			comparatorBowler = (player1, player2) -> player1.bowlingAverage.compareTo(player2.bowlingAverage);
@@ -141,26 +145,36 @@ public class IplAnalyser {
 	}
 
 	public List<Bowler> getTopThreeMaxWicketsWithBestBowlingAverages() throws CsvException {
-		return (List<Bowler>) getTopTenBowlingAverages().stream().sorted(getComparator(SortByParameter.WICKETS)).limit(3).collect(Collectors.toList());
+		return (List<Bowler>) getTopTenBowlingAverages().stream().sorted(getComparator(SortByParameter.WICKETS))
+				.limit(3).collect(Collectors.toList());
 	}
 
 	public List<Bowler> getTopTenBestBowlingAndBattingAverages() {
-		List<Bowler>allRounders=bowlersList.stream().filter(bowler->{
-			return (!bowler.bowlingAverage.equals(0.0))&&batsmenList.stream().anyMatch(batsman->batsman.name.equalsIgnoreCase(bowler.name));
+		List<Bowler> allRounders = bowlersList.stream().filter(bowler -> {
+			return (!bowler.bowlingAverage.equals(0.0))
+					&& batsmenList.stream().anyMatch(batsman -> batsman.name.equalsIgnoreCase(bowler.name));
 		}).collect(Collectors.toList());
-		return allRounders.stream().sorted(Comparator.comparing(allRounder->{
-			Batsman batsman= batsmenList.stream().filter(batsMan->batsMan.name.equalsIgnoreCase(allRounder.name)).findFirst().orElse(null);
-			return allRounder.bowlingAverage*(1/batsman.average);
+		return allRounders.stream().sorted(Comparator.comparing(allRounder -> {
+			Batsman batsman = batsmenList.stream().filter(batsMan -> batsMan.name.equalsIgnoreCase(allRounder.name))
+					.findFirst().orElse(null);
+			return allRounder.bowlingAverage * (1 / batsman.average);
 		})).limit(10).collect(Collectors.toList());
 	}
 
 	public List<Bowler> getTopTenAllRounders() {
-		List<Bowler>allRounders=bowlersList.stream().filter(bowler->{
-			return (!bowler.wickets.equals(0))&&batsmenList.stream().anyMatch(batsman->batsman.name.equalsIgnoreCase(bowler.name));
+		List<Bowler> allRounders = bowlersList.stream().filter(bowler -> {
+			return (!bowler.wickets.equals(0))
+					&& batsmenList.stream().anyMatch(batsman -> batsman.name.equalsIgnoreCase(bowler.name));
 		}).collect(Collectors.toList());
-		return allRounders.stream().sorted(Comparator.comparing(allRounder->{
-			Batsman batsman= batsmenList.stream().filter(batsMan->batsMan.name.equalsIgnoreCase(allRounder.name)).findFirst().orElse(null);
-			return 1/(allRounder.wickets*batsman.runs);
+		return allRounders.stream().sorted(Comparator.comparing(allRounder -> {
+			Batsman batsman = batsmenList.stream().filter(batsMan -> batsMan.name.equalsIgnoreCase(allRounder.name))
+					.findFirst().orElse(null);
+			return 1 / (allRounder.wickets * batsman.runs);
 		})).limit(10).collect(Collectors.toList());
+	}
+
+	public List<Batsman> getTopThreeMostNumHundredsWithBestAverages() throws CsvException {
+		return (List<Batsman>) getTopTenAverages().stream().sorted(getComparator(SortByParameter.NUM_HUNDREDS)).limit(3)
+				.collect(Collectors.toList());
 	}
 }
